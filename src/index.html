@@ -7,15 +7,18 @@
     <title>Document</title>
 </head>
 <body>
+    <p>Введите название события</p>
+    <input type="text" placeholder="Название">
     <p>Введите дату и время события</p>
-    <input type="date">
-    <input type="time">
-    <button>Пуск</button>
+    <input type="date" value="">
+    <input type="time" step="1" value="">
+    <button id="start">Пуск</button>
     <div class="clock">
-      <span class="day">00</span>
-      <span class="house">00</span>
-      <span class="minute">00</span>
-      <span class="second">00</span>
+        <p></p>
+        <span class="day">00</span>
+        <span class="house">00</span>
+        <span class="minute">00</span>
+        <span class="second">00</span>
     </div>
     <script src="index.js"></script>
 </body>
