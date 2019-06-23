@@ -22,11 +22,15 @@ timeControl.value = hours + ':' + minutes + ':' + seconds;
 
 const calculationTime = intervalInSeconds => {
   secondsInInterval.textContent = (intervalInSeconds % 60) < 10 ? '0' + (intervalInSeconds % 60) : (intervalInSeconds % 60);
+  minuteInInterval.textContent = ((intervalInSeconds / 60).toFixed(0) % 60 < 10) ? '0' + ((intervalInSeconds / 60).toFixed(0) % 60) : ((intervalInSeconds / 60).toFixed(0) % 60);
+  hoursInInterval.textContent = ((intervalInSeconds / 3600).toFixed(0) % 24) < 10 ? '0' + ((intervalInSeconds / 3600).toFixed(0) % 24) : ((intervalInSeconds / 3600).toFixed(0) % 24);
+  dayInInterval.textContent = (intervalInSeconds / 86400).toFixed(0);
+  
 } 
 
 start.addEventListener('click', () => {
     timerName.textContent = nameControl.value;
-    intervalInSeconds = Math.floor((+new Date(dateControl.value + ' ' + timeControl.value) - new Date())/1000);
+    intervalInSeconds = Math.abs((+new Date(dateControl.value + ' ' + timeControl.value) - new Date()) / 1000).toFixed(0);
     let timerId = setInterval(() => {
       if(intervalInSeconds <= 0) clearInterval(timerId);
       calculationTime(intervalInSeconds);
