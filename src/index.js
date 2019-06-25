@@ -12,13 +12,13 @@ const dateNow = new Date();
 
 const month = (dateNow.getMonth()+1 < 10) ? ('0' + (dateNow.getMonth()+1)) : ('' + (dateNow.getMonth()+1));
 const day = (dateNow.getDate() < 10) ? ('0' + dateNow.getDate()) : ('' + dateNow.getDate());
-const hours = (dateNow.getHours() < 10) ? ('0' + dateNow.getHours()) : ('' + dateNow.getHours());
-const minutes = (dateNow.getMinutes() < 10) ? ('0' + dateNow.getMinutes()) : ('' + dateNow.getMinutes());
-const seconds = (dateNow.getSeconds() < 10) ? ('0' + dateNow.getSeconds()) : ('' + dateNow.getSeconds());
+// const hours = (dateNow.getHours() < 10) ? ('0' + dateNow.getHours()) : ('' + dateNow.getHours());
+// const minutes = (dateNow.getMinutes() < 10) ? ('0' + dateNow.getMinutes()) : ('' + dateNow.getMinutes());
+// const seconds = (dateNow.getSeconds() < 10) ? ('0' + dateNow.getSeconds()) : ('' + dateNow.getSeconds());
 
 
 dateControl.value = dateNow.getFullYear()+'-'+ month +'-'+day;
-timeControl.value = hours + ':' + minutes + ':' + seconds;
+timeControl.value = '00:00:00';//hours + ':' + minutes + ':' + seconds;
 
 const calculationTime = intervalInSeconds => {
 
@@ -36,15 +36,16 @@ const calculationTime = intervalInSeconds => {
 
   dayInInterval.textContent = Math.floor(intervalInSeconds / 86400);
 
-} 
+};
 
 start.addEventListener('click', () => {
     timerName.textContent = nameControl.value;
-    intervalInSeconds = Math.abs((+new Date(dateControl.value + ' ' + timeControl.value) - new Date()) / 1000).toFixed(0);
+    console.log(dateControl.value + ' ' + timeControl.value);
+    intervalInSeconds = Math.floor(Math.abs((+new Date(dateControl.value + ' ' + timeControl.value) - new Date()) / 1000));
     console.log(intervalInSeconds);
     let timerId = setInterval(() => {
       if(intervalInSeconds <= 0) clearInterval(timerId);
       calculationTime(intervalInSeconds);
       intervalInSeconds--;
     }, 1000)
-})
+});
