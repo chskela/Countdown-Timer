@@ -1,0 +1,22 @@
+* {
+    margin: 0;
+    padding: 0;
+
+}
+
+#warning {
+    color: red;
+    font-size: 30px;
+}
+div {
+    margin: 10px;
+}
+
+input {
+    padding: 5px;
+}
+
+button {
+    margin: 10px;
+    padding: 5px;
+}

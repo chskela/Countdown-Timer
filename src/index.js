@@ -7,6 +7,8 @@ const minuteInInterval = document.querySelector('#minutes');
 const hoursInInterval = document.querySelector('#hours');
 const dayInInterval = document.querySelector('#days');
 const timerName = document.querySelector('#timerName');
+const clock = document.querySelector('.clock');
+const warning = document.querySelector('#warning');
 
 const dateNow = new Date();
 
@@ -18,7 +20,7 @@ const day = (dateNow.getDate() < 10) ? ('0' + dateNow.getDate()) : ('' + dateNow
 
 
 dateControl.value = dateNow.getFullYear()+'-'+ month +'-'+day;
-timeControl.value = '00:00:00';//hours + ':' + minutes + ':' + seconds;
+//timeControl.value = '00:00:00';//hours + ':' + minutes + ':' + seconds;
 
 const calculationTime = intervalInSeconds => {
 
@@ -39,13 +41,19 @@ const calculationTime = intervalInSeconds => {
 };
 
 start.addEventListener('click', () => {
-    timerName.textContent = nameControl.value;
-    console.log(dateControl.value + ' ' + timeControl.value);
-    intervalInSeconds = Math.floor(Math.abs((+new Date(dateControl.value + ' ' + timeControl.value) - new Date()) / 1000));
-    console.log(intervalInSeconds);
-    let timerId = setInterval(() => {
-      if(intervalInSeconds <= 0) clearInterval(timerId);
-      calculationTime(intervalInSeconds);
-      intervalInSeconds--;
-    }, 1000)
+    if (nameControl.value === '') {
+        warning.textContent = 'Введите название события!';
+    } else {
+        clock.hidden = false;
+        timerName.textContent = nameControl.value;
+
+        intervalInSeconds = Math.floor(Math.abs((+new Date(dateControl.value + ' ' + timeControl.value) - new Date()) / 1000));
+        console.log(intervalInSeconds);
+        let timerId = setInterval(() => {
+            if(intervalInSeconds <= 0) clearInterval(timerId);
+            calculationTime(intervalInSeconds);
+            intervalInSeconds--;
+        }, 1000)
+    }
+
 });

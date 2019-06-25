@@ -4,16 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/index.css">
     <title>Document</title>
 </head>
 <body>
-    <p>Введите название события</p>
-    <input type="text" placeholder="Название">
-    <p>Введите дату и время события</p>
-    <input type="date" value="">
-    <input type="time" step="1" value="">
+    <span id="warning"></span>
+    <div>
+        <label for="name">Введите название события</label>
+        <input id="name" type="text" placeholder="Название">
+    </div>
+    <div>
+        <label for="date">Введите дату события</label>
+        <input id="date" type="date">
+    </div>
+    <div>
+        <label for="time">Введите время события</label>
+        <input id="time" type="time" step="1" value="00:00:00">
+    </div>
+
     <button id="start">Пуск</button>
-    <div class="clock">
+    <div class="clock" hidden>
         <p id="timerName"></p>
         <span id="days">00</span> day
         <span id="hours">00</span> hours
