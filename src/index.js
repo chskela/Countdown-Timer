@@ -1,14 +1,8 @@
 const dateControl = document.querySelector('input[type="date"]');
 const timeControl = document.querySelector('input[type="time"]');
 const nameControl = document.querySelector('input[type="text"]');
-const start = document.querySelector('#start');
-const secondsInInterval = document.querySelector('#seconds');
-const minutesInInterval = document.querySelector('#minutes');
-const hoursInInterval = document.querySelector('#hours');
-const dayInInterval = document.querySelector('#days');
-const timerName = document.querySelector('#timerName');
-const clock = document.querySelector('.clock');
-const warning = document.querySelector('#warning');
+//const start = document.querySelector('#start');
+//const warning = document.querySelector('#warning');
 
 const dateNow = new Date();
 
@@ -20,18 +14,28 @@ dateControl.value = dateNow.getFullYear() + '-' + month + '-' + day;
 let str = '';
 
 for (let i = 0; i < localStorage.length; i++) {
-  const time = calculationTime(Math.floor(+localStorage.getItem(localStorage.key(i)) - new Date()));
-  str += `<li>
-            <div>
-              <p>${localStorage.key(i)}</p>
-              <span>${time.days}</span> days 
-              <span>${time.hours}</span> hours 
-              <span>${time.minutes}</span> minutes 
-              <span>${time.seconds}</span> seconds
-            </div>
-          </li>`;
-} 
-ul.innerHTML += str;
+    intervalInSeconds = Math.floor((new Date(localStorage.getItem(localStorage.key(i))) - new Date()) / 1000);
+    let timerId = setInterval(() => {
+        ul.innerHTML = '';
+        if(intervalInSeconds <= 0) clearInterval(timerId);
+
+        const time = calculationTime(intervalInSeconds);
+
+        str =   `<li>
+                    <div>
+                        <p>${localStorage.key(i)}</p>
+                        <span>${time.days}</span> days 
+                        <span>${time.hours}</span> hours 
+                        <span>${time.minutes}</span> minutes 
+                        <span>${time.seconds}</span> seconds
+                    </div>
+                </li>`;
+
+        ul.innerHTML = str;
+
+        intervalInSeconds--;
+    }, 1000)
+}
 
 function calculationTime(intervalInSeconds) {
   
@@ -48,23 +52,20 @@ function calculationTime(intervalInSeconds) {
       (Math.floor(intervalInSeconds / 3600) % 24);
 
   const days = Math.floor(intervalInSeconds / 86400);
-  
-  const time = {
-    seconds, 
-    minutes, 
-    hours, 
-    days
-  } 
-  return time;
-};
+
+  return {
+      seconds,
+      minutes,
+      hours,
+      days
+  };
+}
 
 start.addEventListener('click', () => {
 
     if (nameControl.value === '') {
         warning.textContent = 'Введите название события!';
     } else {
-
-        timerName.textContent = nameControl.value;
 
         const setTime = new Date(dateControl.value + ' ' + timeControl.value);
         const nowTime = new Date();
@@ -73,13 +74,25 @@ start.addEventListener('click', () => {
             warning.textContent = 'Введите корректную дату и время!';
         } else {
             localStorage.setItem(nameControl.value, setTime);
-            clock.hidden = false;
+
             intervalInSeconds = Math.floor(Math.abs((setTime - nowTime) / 1000));
 
             let timerId = setInterval(() => {
                 if(intervalInSeconds <= 0) clearInterval(timerId);
                 calculationTime(intervalInSeconds);
-                
+                const time = calculationTime(intervalInSeconds);
+
+                str = `<li>
+                            <div>
+                                <p>${nameControl.value}</p>
+                                <span>${time.days}</span> days 
+                                <span>${time.hours}</span> hours 
+                                <span>${time.minutes}</span> minutes 
+                                <span>${time.seconds}</span> seconds
+                            </div>
+                      </li>`;
+
+                ul.innerHTML = str;
                 intervalInSeconds--;
             }, 1000)
         }
