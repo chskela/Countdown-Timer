@@ -4,99 +4,93 @@ const nameControl = document.querySelector('input[type="text"]');
 //const start = document.querySelector('#start');
 //const warning = document.querySelector('#warning');
 
+// Устанавливаем текущую дату
 const dateNow = new Date();
 
-const month = (dateNow.getMonth() + 1 < 10) ? ('0' + (dateNow.getMonth() + 1)) : ('' + (dateNow.getMonth() + 1));
-const day = (dateNow.getDate() < 10) ? ('0' + dateNow.getDate()) : ('' + dateNow.getDate());
+const month =
+  dateNow.getMonth() + 1 < 10
+    ? "0" + (dateNow.getMonth() + 1)
+    : "" + (dateNow.getMonth() + 1);
+const day =
+  dateNow.getDate() < 10 ? "0" + dateNow.getDate() : "" + dateNow.getDate();
 
-dateControl.value = dateNow.getFullYear() + '-' + month + '-' + day;
+dateControl.value = dateNow.getFullYear() + "-" + month + "-" + day;
 
-let str = '';
-
+// Получаем таймер из LocalStorage
 for (let i = 0; i < localStorage.length; i++) {
-    intervalInSeconds = Math.floor((new Date(localStorage.getItem(localStorage.key(i))) - new Date()) / 1000);
-    let timerId = setInterval(() => {
-        ul.innerHTML = '';
-        if(intervalInSeconds <= 0) clearInterval(timerId);
+  intervalInSeconds = Math.floor(
+    (new Date(localStorage.getItem(localStorage.key(i))) - new Date()) / 1000
+  );
+  nameTimer.textContent = localStorage.key(i);
 
-        const time = calculationTime(intervalInSeconds);
+  let timerId = setInterval(() => {
+    if (intervalInSeconds <= 0) {
+      nameTimer.textContent = nameTimer.textContent + ` - Время вышло!!!`;
 
-        str =   `<li>
-                    <div>
-                        <p>${localStorage.key(i)}</p>
-                        <span>${time.days}</span> days 
-                        <span>${time.hours}</span> hours 
-                        <span>${time.minutes}</span> minutes 
-                        <span>${time.seconds}</span> seconds
-                    </div>
-                </li>`;
+      clearInterval(timerId);
+    }
 
-        ul.innerHTML = str;
+    const time = calculationTime(intervalInSeconds);
 
-        intervalInSeconds--;
-    }, 1000)
+    days.textContent = time.days;
+    hours.textContent = time.hours;
+    minutes.textContent = time.minutes;
+    seconds.textContent = time.seconds;
+
+    intervalInSeconds--;
+  }, 1000);
 }
 
+// Вычисляем интервал в днях, часах, минутах и секундах
 function calculationTime(intervalInSeconds) {
-  
-  const seconds = (intervalInSeconds % 60) < 10 ?
-      '0' + (intervalInSeconds % 60) :
-      (intervalInSeconds % 60);
+  const seconds = intervalInSeconds % 60;
 
-  const minutes = (Math.floor(intervalInSeconds / 60) % 60 < 10) ?
-      '0' + (Math.floor(intervalInSeconds / 60) % 60) :
-      (Math.floor(intervalInSeconds / 60) % 60);
+  const minutes = Math.floor(intervalInSeconds / 60) % 60;
 
-  const hours = (Math.floor(intervalInSeconds / 3600) % 24) < 10 ?
-      '0' + (Math.floor(intervalInSeconds / 3600) % 24) :
-      (Math.floor(intervalInSeconds / 3600) % 24);
+  const hours = Math.floor(intervalInSeconds / 3600) % 24;
 
   const days = Math.floor(intervalInSeconds / 86400);
 
   return {
-      seconds,
-      minutes,
-      hours,
-      days
+    seconds,
+    minutes,
+    hours,
+    days
   };
 }
 
-start.addEventListener('click', () => {
+start.addEventListener("click", () => {
+  if (nameControl.value === "") {
+    warning.textContent = "Введите название события!";
+  } else {
+    const setTime = new Date(dateControl.value + " " + timeControl.value);
 
-    if (nameControl.value === '') {
-        warning.textContent = 'Введите название события!';
+    const nowTime = new Date();
+
+    if (setTime <= nowTime) {
+      warning.textContent = "Введите корректную дату и время!";
     } else {
+      warning.textContent = "";
+      localStorage.setItem(nameControl.value, setTime);
 
-        const setTime = new Date(dateControl.value + ' ' + timeControl.value);
-        const nowTime = new Date();
+      intervalInSeconds = Math.floor((setTime - nowTime) / 1000);
+      nameTimer.textContent = nameControl.value;
 
-        if (setTime <= nowTime)  {
-            warning.textContent = 'Введите корректную дату и время!';
-        } else {
-            localStorage.setItem(nameControl.value, setTime);
+      let timerId = setInterval(() => {
+        if (intervalInSeconds <= 0) {
+          nameTimer.textContent = nameTimer.textContent + ` - Время вышло!!!`;
 
-            intervalInSeconds = Math.floor(Math.abs((setTime - nowTime) / 1000));
-
-            let timerId = setInterval(() => {
-                if(intervalInSeconds <= 0) clearInterval(timerId);
-                calculationTime(intervalInSeconds);
-                const time = calculationTime(intervalInSeconds);
-
-                str = `<li>
-                            <div>
-                                <p>${nameControl.value}</p>
-                                <span>${time.days}</span> days 
-                                <span>${time.hours}</span> hours 
-                                <span>${time.minutes}</span> minutes 
-                                <span>${time.seconds}</span> seconds
-                            </div>
-                      </li>`;
-
-                ul.innerHTML = str;
-                intervalInSeconds--;
-            }, 1000)
+          clearInterval(timerId);
         }
+        const time = calculationTime(intervalInSeconds);
 
+        days.textContent = time.days;
+        hours.textContent = time.hours;
+        minutes.textContent = time.minutes;
+        seconds.textContent = time.seconds;
+
+        intervalInSeconds--;
+      }, 1000);
     }
-
+  }
 });
